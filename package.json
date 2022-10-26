@@ -1,0 +1,19 @@
+{
+  "name": "parallelogram",
+  "version": "1.0.0",
+  "description": "Program draws a parallelogram with circle insede that can be replaced",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShinySpirit/Parallelogram.git"
+  },
+  "author": "Shiny",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShinySpirit/Parallelogram/issues"
+  },
+  "homepage": "https://github.com/ShinySpirit/Parallelogram#readme"
+}

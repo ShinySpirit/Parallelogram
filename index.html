@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallelogram</title>
+</head>
+
+<body style="margin: 0;">
+
+    <div style="position: absolute; padding-left: 82%">
+
+        <p>
+            <span id="a"></span>
+        </p>
+
+        <p>
+            <span id="b"></span>
+        </p>
+
+        <p>
+            <span id="c"></span>
+        </p>
+
+        <p>
+            <span id="d"></span>
+        </p>
+        <p>
+            <span id="o"></span>
+        </p>
+        <p>
+            <span id="s"></span>
+        </p>
+        <p>
+            <span id="r"></span>
+        </p>
+
+    </div>
+
+    <div style="position: absolute; margin-left: 82%; padding-top: 30%; margin-right: 1%;">
+
+        <p>
+            <span id="inf"></span>
+        </p>
+        <p>
+        <pre><span id="me"></span></pre>
+        </p>
+
+    </div>
+
+
+    <canvas id="canv" style="width: 80%; height: 50%; display: block; border: 1px dashed gray;"></canvas>
+
+    <input type="button" id="reset" style=" margin-left: 70%; margin-top: 1%;" value="Reset">
+    <input type="button" id="about" style=" margin-left: 10px; margin-top: 1%" value="About">
+
+
+
+    <script>
+
+        let canv = document.getElementById("canv");
+        let ctx = canv.getContext('2d');
+        document.onselectstart = () => {
+            console.log("Select block");
+            return false;
+        };
+
+        canv.width = window.innerWidth * 0.8;
+        canv.height = window.innerHeight * 0.8;
+
+        let a = {
+            x: -10,
+            y: -10,
+            init: false,
+            drag: false,
+        }
+
+        let b = {
+            x: -10,
+            y: -10,
+            init: false,
+            drag: false,
+        }
+
+        let c = {
+            x: -10,
+            y: -10,
+            init: false,
+            drag: false,
+        }
+
+        let d = {
+            x: -10,
+            y: -10,
+            init: false,
+            drag: false,
+        }
+
+        let o = {
+            x: 0,
+            y: 0,
+        }
+
+        let S = 0;
+
+        let R = 0;
+
+        document.getElementById("reset").onclick = () => {
+
+            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            a.init = false;
+            a.drag = false;
+            b.init = false;
+            b.drag = false;
+            c.init = false;
+            c.drag = false;
+
+
+            document.getElementById("a").textContent = '';
+            document.getElementById("b").textContent = '';
+            document.getElementById("c").textContent = '';
+            document.getElementById("d").textContent = '';
+            document.getElementById("o").textContent = '';
+            document.getElementById("r").textContent = '';
+            document.getElementById("s").textContent = '';
+            document.getElementById("inf").textContent = '';
+            document.getElementById("me").textContent = '';
+        };
+
+        document.getElementById("about").onclick = () => {
+
+            document.getElementById("inf").textContent = "Click on bordered area of screen to put a point. There will be built a parallelogram and circle regarding to inputted points with the same center and square. You can replace point dragging them.";
+            document.getElementById("me").textContent = "Oleksandr Boyko \nbombivita@gmail.com \n+380636205794";
+        };
+
+
+
+        window.addEventListener("click", e => {
+
+            if (e.x < window.innerWidth * 0.8 && e.y < window.innerHeight * 0.8) {
+                if (!a.init) {
+                    init(a, e);
+                    document.getElementById("a").textContent = "A:  x: " + a.x + " y: " + a.y;
+                    draw_circle(a.x, a.y);
+                }
+                else if (!b.init) {
+                    init(b, e);
+                    document.getElementById("b").textContent = "B:  x: " + b.x + " y: " + b.y;
+                    draw_circle(b.x, b.y);
+                }
+                else if (!c.init) {
+                    init(c, e);
+                    document.getElementById("c").textContent = "C:  x: " + c.x + " y: " + c.y;
+                    draw_circle(c.x, c.y);
+
+                    count();
+                }
+            }
+        });
+
+        window.addEventListener("mousedown", e => {
+
+            if (a.init && b.init && c.init && ((e.x < a.x + 8 && e.x > a.x - 8) && (e.y < a.y + 8 && e.y > a.y - 8))) {
+                a.drag = true;
+            }
+
+            else if (a.init && b.init && c.init && ((e.x < b.x + 8 && e.x > b.x - 8) && (e.y < b.y + 8 && e.y > b.y - 8))) {
+                b.drag = true;
+            }
+
+            else if (a.init && b.init && c.init && ((e.x < c.x + 8 && e.x > c.x - 8) && (e.y < c.y + 8 && e.y > c.y - 8))) {
+                c.drag = true;
+            }
+
+        });
+
+        window.addEventListener("mouseup", e => {
+
+            a.drag = false;
+            b.drag = false;
+            c.drag = false;
+
+        });
+
+
+        window.addEventListener("mousemove", e => {
+
+            if (a.drag)
+                drag(a, e);
+
+            if (b.drag)
+                drag(b, e);
+
+            if (c.drag)
+                drag(c, e);
+
+        });
+
+
+
+        function drag(point, e) {
+            point.x = e.x;
+            point.y = e.y;
+            count();
+        }
+
+        function set_drag(point, e) {
+            if ((e.x < point.x + 4 && e.x > point.x - 4) && (e.y < point.y + 4 && e.y > point.y - 4)) {
+                point.drag = true;
+            }
+        }
+
+        function init(point, e) {
+            point.x = e.x;
+            point.y = e.y;
+            point.init = true;
+        }
+
+        function count() {
+            o.x = (a.x + c.x) / 2;
+            o.y = (a.y + c.y) / 2;
+
+            d.x = 2 * o.x - b.x;
+            d.y = 2 * o.y - b.y;
+
+            document.getElementById("d").textContent = "D:  x: " + d.x + " y: " + d.y;
+
+            document.getElementById("o").textContent = "O:  x: " + o.x + " y: " + o.y;
+
+            let ab = 0;
+            let da = 0;
+            let sinC = 0;
+            let bd = 0;
+
+            ab = Math.sqrt(Math.pow((b.x - a.x), 2) + (Math.pow((b.y - a.y), 2)));
+
+            da = Math.sqrt(Math.pow((a.x - d.x), 2) + (Math.pow((a.y - d.y), 2)));
+
+            bd = Math.sqrt(Math.pow((d.x - b.x), 2) + (Math.pow((d.y - b.y), 2)));
+
+            sinC = Math.sin(Math.acos((ab * ab + da * da - bd * bd) / (2 * ab * da)));
+
+            S = ab * da * sinC;
+
+            R = Math.sqrt((S / Math.PI));
+
+            document.getElementById("s").textContent = "S:  " + S;
+
+            document.getElementById("r").textContent = "R:  " + R;
+
+            draw();
+
+        }
+
+        function draw_circle(x, y) {
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(x, y, 11, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+            draw_circle(a.x, a.y);
+            draw_circle(b.x, b.y);
+            draw_circle(c.x, c.y);
+
+            ctx.strokeStyle = "blue";
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.lineTo(c.x, c.y);
+            ctx.lineTo(d.x, d.y);
+            ctx.closePath();
+            ctx.stroke();
+
+            ctx.strokeStyle = "blue";
+            ctx.lineWidth = 3;
+
+            ctx.strokeStyle = "yellow";
+
+            ctx.beginPath();
+            ctx.arc(o.x, o.y, R, 0, 2 * Math.PI);
+            ctx.stroke();
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
